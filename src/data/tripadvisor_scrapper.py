@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-#from selenium.webdriver.support import EC
 from selenium.webdriver.common.by import By
 
 import time
@@ -93,11 +92,12 @@ class Restaurants:
 
 if __name__ == "__main__":
     #Opciones de naveragion
-    options = webdriver.ChromeOptions()
-    options.add_argument('--start-maximized')
+    #options = webdriver.ChromeOptions()
+    #options.add_argument('--start-maximized')
     #options.add_argument('--disable-extensions')
-    driver_path = 'c:/Users/Michael/Desktop/Python Projects/TripAdvisor Web Scrapper/chromedriver.exe'
-    driver = webdriver.Chrome(driver_path, chrome_options=options)
+    #driver_path = 'c:/Users/Michael/Desktop/Python Projects/TripAdvisor Web Scrapper/chromedriver.exe'
+    #driver = webdriver.Chrome(driver_path, chrome_options=options)
+    driver = webdriver.Chrome()
     myrestaurants = Restaurants(driver).get()
     print(myrestaurants)
 
