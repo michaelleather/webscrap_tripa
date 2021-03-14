@@ -54,57 +54,7 @@ class Restaurants:
     def pages(self):
         pages_xpath = "//a[string-length(@data-page-number)>0]"
         pages_numbers = self.driver.find_elements(By.XPATH, pages_xpath)
-        page_li#import pandas as pd 
-#
-#
-#data = [{'area': 'new-hills', 'rainfall': 100, 'temperature': 20}, 
-#		{'area': 'cape-town', 'rainfall': 70, 'temperature': 25}, 
-#		{'area': 'mumbai', 'rainfall': 200, 'temperature': 39 }] 
-#
-#df = pd.DataFrame.from_dict(data) 
-#
-#df 
-#despues hacer el import csv
-
-#        time.sleep(2)
-#works
-#driver.find_element_by_xpath('//*[@id="component_2"]/div/div[2]/span/div[1]/div[2]/div[1]/div').click()
-    
-#works
-#driver.switch_to.window(driver.window_handles[-1])
-        
-
-#third
-#//*[@id="component_2"]/div/div[3]/span/div[1]/div[2]/div[1]/div/span/a
-#fourth
-#//*[@id"component_2"]/div/div[4]/span/div[1]/div[2]/div[1]/div/span/a
-
-#get data from restaurant
-
-        
-#        try:
-#            rest1 = Restaurant(name.text, address.text, telephone.text, website.get_attribute('href'), email.get_attribute('href'))
-#        except:
-#            rest1 = Restaurant(name.text, address.text, telephone.text, website.get_attribute('href'), email = "not_available")
-
-
-
-
-# Prepare CSV file
-#csvFile = open("restaurants.csv", "w", newline='', encoding="utf-8")
-#csvWriter = csv.writer(csvFile)
-#csvWriter.writerow(['name','address','telephone','website','email'])
-#
-##if restaurant doesnt have email then assign text
-#try:
-#    csvWriter.writerow((name.text, address.text, telephone.text, website.get_attribute('href'), email.text))
-#except:
-#    csvWriter.writerow((name.text, address.text, telephone.text, website.get_attribute('href'), email.get_attribute('href')))
-#
-## Close CSV file and browser
-#csvFile.close()
-#        driver.close()
- #st = []
+        page_list = []
         for page in pages_numbers:
             page_list.append(page.text)
         page_list = [int(s) for s in page_list if s.isdigit()]
