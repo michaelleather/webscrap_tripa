@@ -71,10 +71,21 @@ class Restaurants:
         a = self.next_button()
         return a is not None
 
+        
+
     def goto_next(self):
+        a = """data-page-number="13" 
+        data-offset="360" href="/RestaurantSearch-g187439-oa360-a_date.2021__2D__03__2D__15-a_people.2-a_time.20%3A00%3A00-a_zur.2021__5F__03__5F__15-Marbell.html#EATERY_LIST_CONTENTS" class="nav next rndBtn ui_button primary taLnk" 
+        onclick="  require('common/Radio')('restaurant-filters').emit('paginate', this.getAttribute('data-offset'));; ta.trackEventOnPage('STANDARD_PAGINATION', 'next', '13', 0); return false;"
+        """
         try:            
+            # self.next_button().click()
+            print("antes de script")
+            driver.execute_script(f"arguments[0].setAttribute('data-offset', '360')", self.next_button())
             self.next_button().click()
         except:
+            driver.execute_script(f"arguments[0].setAttribute('data-offset', '360')", self.next_button())
+            print("despues de script")
             driver.execute_script("arguments[0].click();", self.next_button())
     
     def get(self):
@@ -86,6 +97,7 @@ class Restaurants:
         max_page = self.pages()
         while self.is_next_present():
             print("papa pa la siguiente")
+            time.sleep(3)
             self.goto_next()
 
 
@@ -119,7 +131,3 @@ if __name__ == "__main__":
     driver = webdriver.Chrome()
     myrestaurants = Restaurants(driver).get()
     print(myrestaurants)
-
-
-df = pd.DataFrame.from_dict(myrestaurants)
-df.to_csv('my_new_file.csv', index=False)
