@@ -45,7 +45,8 @@ class Restaurant:
         return email.replace("mailto:","").replace("?subject=?","")
     
 class Restaurants:
-    tripadvisor = 'https://www.tripadvisor.com/Restaurants-g187439-Marbella_Costa_del_Sol_Province_of_Malaga_Andalucia.html'
+    tripadvisor = "https://www.tripadvisor.com/Restaurants-g187439-Marbella_Costa_del_Sol_Province_of_Malaga_Andalucia.html"
+    xpath_next = "//a[contains(text(),'Next')]"
     
     def __init__(self, driver):
         self.driver = driver
@@ -62,6 +63,19 @@ class Restaurants:
     
     def next_page(self, page_to_click):
         self.driver.find_element_by_xpath(f"//a[@data-page-number='{page_to_click}']").click()    
+
+    def next_button(self):
+        return self.driver.find_element_by_xpath(self.xpath_next)
+
+    def is_next_present(self):
+        a = self.next_button()
+        return a is not None
+
+    def goto_next(self):
+        try:            
+            self.next_button().click()
+        except:
+            driver.execute_script("arguments[0].click();", self.next_button())
     
     def get(self):
         result = []
@@ -70,24 +84,29 @@ class Restaurants:
         self.driver.window_handles
         print('todavia no hemos pasado pagina')
         max_page = self.pages()
-        for j in range(1,43):
-            min_range = (j-1)*30 if j > 1 else 1
-            max_range = min_range + 30
-            for i in range(min_range, max_range):
-                try:
-                    self.driver.find_element_by_xpath('//*[@id="component_2"]/div/div[%d]/span/div[1]/div[2]/div[1]/div/span/a' %(i)).click()
-                    self.driver.switch_to.window(driver.window_handles[-1])
-                    restaurant = Restaurant(self.driver).get()
-                    print('pagina ' + str(j) + ' restaurante' + str(i))
-                    print(restaurant)
-                    result.append(restaurant)
-                    driver.close()
-                    driver.switch_to.window(driver.window_handles[0])
-                except:
-                    print("no_funciona")
-            self.next_page(j+1)
-            print('hemos pasado de pagina')
-        WebDriverWait(driver, 1).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR,'button.evidon-banner-acceptbutton'))).click()
+        while self.is_next_present():
+            print("papa pa la siguiente")
+            self.goto_next()
+
+
+        # for j in range(1, 43):
+        #     min_range = (j-1)*30 if j > 1 else 1
+        #     max_range = min_range + 30
+        #     for i in range(min_range, max_range):
+        #         try:
+        #             self.driver.find_element_by_xpath('//*[@id="component_2"]/div/div[%d]/span/div[1]/div[2]/div[1]/div/span/a' %(i)).click()
+        #             self.driver.switch_to.window(driver.window_handles[-1])
+        #             restaurant = Restaurant(self.driver).get()
+        #             print('pagina ' + str(j) + ' restaurante' + str(i))
+        #             print(restaurant)
+        #             result.append(restaurant)
+        #             driver.close()
+        #             driver.switch_to.window(driver.window_handles[0])
+        #         except:
+        #             print("no_funciona")
+        #     self.next_page(j+1)
+        #     print('hemos pasado de pagina')
+        # WebDriverWait(driver, 1).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR,'button.evidon-banner-acceptbutton'))).click()
         return result
 
 if __name__ == "__main__":
