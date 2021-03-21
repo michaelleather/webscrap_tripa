@@ -114,8 +114,9 @@ class Restaurants:
             time.sleep(3)
             self.open_restaurants(page_number)
             self.open_new_browser()
-            self.goto_next(page_range)
+            self.goto_next(page_range)            
             page_number += 1
+            page_range = 30 * page_number 
             print(page_range)
             time.sleep(3)
             
