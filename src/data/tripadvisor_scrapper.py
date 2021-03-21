@@ -73,14 +73,8 @@ class Restaurants:
 
         
 
-    def goto_next(self):
-        a = """data-page-number="13" 
-        data-offset="360" href="/RestaurantSearch-g187439-oa360-a_date.2021__2D__03__2D__15-a_people.2-a_time.20%3A00%3A00-a_zur.2021__5F__03__5F__15-Marbell.html#EATERY_LIST_CONTENTS" class="nav next rndBtn ui_button primary taLnk" 
-        onclick="  require('common/Radio')('restaurant-filters').emit('paginate', this.getAttribute('data-offset'));; ta.trackEventOnPage('STANDARD_PAGINATION', 'next', '13', 0); return false;"
-        """
+    def goto_next(self):        
         try:            
-            # self.next_button().click()
-            print("antes de script")
             driver.execute_script(f"arguments[0].setAttribute('data-offset', '360')", self.next_button())
             self.next_button().click()
         except:
