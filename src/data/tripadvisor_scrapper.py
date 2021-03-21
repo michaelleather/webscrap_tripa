@@ -14,22 +14,23 @@ class Restaurant:
     def __init__(self, driver):
         self.driver = driver
 
-    def get(self):
+    def __get_element_text(self, xpath, attribute):
         try:
-            self.name = self.driver.find_element_by_xpath('//*[@id="component_45"]/div/div[1]/h1').text
-            self.address = self.driver.find_element_by_xpath('//*[@id="component_45"]/div/div[3]/span[1]/span/a').text
-            self.telephone = self.driver.find_element_by_xpath('//*[@id="component_45"]/div/div[3]/span[2]/span/span[2]/a').text
-            self.website = self.driver.find_element_by_xpath('//*[@id="component_45"]/div/div[3]/span[3]/span/a').get_attribute('href')
-            try:
-                self.email = self.driver.find_element_by_xpath('//a[contains(@href,"mailto")]').get_attribute('href')
-            except:
-                self.email = "not_available"
-        except:
-            self.name = "not_available"
-            self.address = "not_available"
-            self.telephone = "not_available"
-            self.website = "not_available"
-            self.email = "not_available"
+            element = self.driver.find_element_by_xpath(xpath)
+            if attribute == "text":
+                return element.text
+            else:
+                return element.get_attribute('href')
+        except Exception as e:
+            # print("Error while loading restaurant " + str(e))
+            return "not_available"
+
+    def get(self):
+        self.name = self.__get_element_text("//h1[@data-test-target='top-info-header']", "text")
+        self.address = self.__get_element_text("//a[@href='#MAPVIEW']", "text")
+        self.telephone = self.__get_element_text("//a[contains(@href,'tel:')]", "text")
+        self.website = self.__get_element_text("//a[contains(text(),'Website')]", "get")
+        self.email = self.__get_element_text('//a[contains(@href,"mailto")]', "get")
 
         return self.to_dict()
                      
@@ -71,28 +72,58 @@ class Restaurants:
         a = self.next_button()
         return a is not None
 
-        
-
-    def goto_next(self):        
+    def goto_next(self, page_range):        
         try:            
-            driver.execute_script(f"arguments[0].setAttribute('data-offset', '360')", self.next_button())
+            driver.execute_script(f"arguments[0].setAttribute('data-offset', '{page_range}')", self.next_button())
             self.next_button().click()
         except:
-            driver.execute_script(f"arguments[0].setAttribute('data-offset', '360')", self.next_button())
+            driver.execute_script(f"arguments[0].setAttribute('data-offset', '{page_range}')", self.next_button())
             print("despues de script")
             driver.execute_script("arguments[0].click();", self.next_button())
-    
+
+    def open_new_browser(self):
+        self.driver.get(self.tripadvisor)        
+        self.driver.window_handles
+
+    def open_restaurants(self, j):
+        def open_restaurant_in_page(i):
+            return self.driver.find_element_by_xpath('//*[@id="component_2"]/div/div[%d]/span/div[1]/div[2]/div[1]/div/span/a' %(i))
+
+        result = []
+        min_range = (j-1)*30 if j > 1 else 1
+        max_range = min_range + 30
+        for i in range(min_range, max_range):
+            try:
+                link_to_restaurant = open_restaurant_in_page(i)
+                driver.execute_script("arguments[0].click();", link_to_restaurant)
+                self.driver.switch_to.window(driver.window_handles[-1])
+                restaurant = Restaurant(self.driver).get()
+                print('pagina ' + str(j) + ' restaurante' + str(i))
+                print(restaurant)
+                result.append(restaurant)
+                driver.close()
+                driver.switch_to.window(driver.window_handles[0])
+            except Exception as e:
+                print("Error message " + str(e))
+
     def get(self):
         result = []
-        self.driver.get(self.tripadvisor)
-        WebDriverWait(self.driver, 1).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR,'button.evidon-banner-acceptbutton'))).click()
-        self.driver.window_handles
+        self.open_new_browser()
+        # WebDriverWait(self.driver, 1).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR,'button.evidon-banner-acceptbutton'))).click()
         print('todavia no hemos pasado pagina')
-        max_page = self.pages()
+        max_page = self.pages()        
+        page_number = 1
+        page_range = 30 * page_number 
         while self.is_next_present():
             print("papa pa la siguiente")
             time.sleep(3)
-            self.goto_next()
+            self.open_restaurants(page_number)
+            self.goto_next(page_range)
+            page_number += 1
+            print(page_range)
+            time.sleep(3)
+            self.open_new_browser()
+
 
 
         # for j in range(1, 43):
