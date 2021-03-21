@@ -102,10 +102,9 @@ class Restaurants:
             except Exception as e:
                 print("Error message " + str(e))
 
-    def get(self):
+    def get(self):       
         result = []
-        self.open_new_browser()
-        # WebDriverWait(self.driver, 1).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR,'button.evidon-banner-acceptbutton'))).click()
+        self.open_new_browser()        
         print('todavia no hemos pasado pagina')
         max_page = self.pages()        
         page_number = 1
@@ -114,41 +113,15 @@ class Restaurants:
             print("papa pa la siguiente")
             time.sleep(3)
             self.open_restaurants(page_number)
+            self.open_new_browser()
             self.goto_next(page_range)
             page_number += 1
             print(page_range)
             time.sleep(3)
-            self.open_new_browser()
-
-
-
-        # for j in range(1, 43):
-        #     min_range = (j-1)*30 if j > 1 else 1
-        #     max_range = min_range + 30
-        #     for i in range(min_range, max_range):
-        #         try:
-        #             self.driver.find_element_by_xpath('//*[@id="component_2"]/div/div[%d]/span/div[1]/div[2]/div[1]/div/span/a' %(i)).click()
-        #             self.driver.switch_to.window(driver.window_handles[-1])
-        #             restaurant = Restaurant(self.driver).get()
-        #             print('pagina ' + str(j) + ' restaurante' + str(i))
-        #             print(restaurant)
-        #             result.append(restaurant)
-        #             driver.close()
-        #             driver.switch_to.window(driver.window_handles[0])
-        #         except:
-        #             print("no_funciona")
-        #     self.next_page(j+1)
-        #     print('hemos pasado de pagina')
-        # WebDriverWait(driver, 1).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR,'button.evidon-banner-acceptbutton'))).click()
+            
         return result
 
 if __name__ == "__main__":
-    #Opciones de naveragion
-    #options = webdriver.ChromeOptions()
-    #options.add_argument('--start-maximized')
-    #options.add_argument('--disable-extensions')
-    #driver_path = 'c:/Users/Michael/Desktop/Python Projects/TripAdvisor Web Scrapper/chromedriver.exe'
-    #driver = webdriver.Chrome(driver_path, chrome_options=options)
     driver = webdriver.Chrome()
     myrestaurants = Restaurants(driver).get()
     print(myrestaurants)
