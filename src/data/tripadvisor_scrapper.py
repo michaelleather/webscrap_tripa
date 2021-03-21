@@ -85,21 +85,17 @@ class Restaurants:
         self.driver.get(self.tripadvisor)        
         self.driver.window_handles
 
-    def open_restaurants(self, j):
-        def open_restaurant_in_page(i):
-            return self.driver.find_element_by_xpath('//*[@id="component_2"]/div/div[%d]/span/div[1]/div[2]/div[1]/div/span/a' %(i))
-
+    def open_restaurants(self, j):        
         result = []
-        min_range = (j-1)*30 if j > 1 else 1
-        max_range = min_range + 30
-        for i in range(min_range, max_range):
+        links = self.driver.find_elements(By.XPATH, "//a[contains(@href, '/Restaurant_Review') and @target='_blank' and text()]")
+
+        for i, link in enumerate(links):
             try:
-                link_to_restaurant = open_restaurant_in_page(i)
+                link_to_restaurant = link
                 driver.execute_script("arguments[0].click();", link_to_restaurant)
                 self.driver.switch_to.window(driver.window_handles[-1])
                 restaurant = Restaurant(self.driver).get()
-                print('pagina ' + str(j) + ' restaurante' + str(i))
-                print(restaurant)
+                print(f"Page {str(j)} restaurante {str(i)} {restaurant.get('name')} with email {restaurant.get('email')}")
                 result.append(restaurant)
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
