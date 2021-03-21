@@ -101,9 +101,13 @@ class Restaurants:
                 driver.switch_to.window(driver.window_handles[0])
             except Exception as e:
                 print("Error message " + str(e))
+        return result
 
-    def get(self):       
-        result = []
+    def export_csv(self, restaurant_list):
+
+
+    def get(self):  
+        #  TODO: delete file if exists
         self.open_new_browser()        
         print('todavia no hemos pasado pagina')
         max_page = self.pages()        
@@ -112,15 +116,16 @@ class Restaurants:
         while self.is_next_present():
             print("papa pa la siguiente")
             time.sleep(3)
-            self.open_restaurants(page_number)
+            restaurant_list = self.open_restaurants(page_number)
+            # TODO: Add list of restaurant to pandas dataframe
             self.open_new_browser()
             self.goto_next(page_range)            
             page_number += 1
             page_range = 30 * page_number 
             print(page_range)
             time.sleep(3)
-            
-        return result
+           
+
 
 if __name__ == "__main__":
     driver = webdriver.Chrome()
